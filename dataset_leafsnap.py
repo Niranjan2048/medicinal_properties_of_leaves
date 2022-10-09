@@ -48,15 +48,14 @@ print('\tTesting Samples  : {:5d}'.format(len(images_test['original'])))
 print('[INFO] Processing Images')
 
 os.chdir('dataset_all/{}'.format(DATA_SOURCE))
-def save_images(images, species,  directory='train', \
-                csv_name='temp.csv', augment=False):
+def save_images(images, species, directory='train',csv_name='temp.csv', augment=False):
     cropped_images = []
     image_species = []
     image_paths = []
     count = 1
-    write_dir = 'dataset/{}'.format(directory)
-    if not os.path.exists(write_dir):
-        os.mkdir(write_dir)
+    write_dir ="dataset/{}".format(directory)
+    # if not os.path.exists(write_dir):
+    #     os.mkdir(write_dir)
 
     for index in range(len(images['original'])):
         image = utils.load_image_and_preprocess(
@@ -82,7 +81,7 @@ def save_images(images, species,  directory='train', \
 
                     file_name = '{}.jpg'.format(count)
                     image_to_write = cv2.cvtColor(rotated_image, cv2.COLOR_RGB2BGR)
-    #                    cv2.imwrite(os.path.join(image_dir, file_name), image_to_write)
+                    #cv2.imwrite(os.path.join(image_dir, file_name), image_to_write)
                     result = Image.fromarray((image_to_write).astype(np.uint8))
                     result.save(os.path.join(image_dir, file_name))
                     image_paths.append(os.path.join(image_dir, file_name))
@@ -101,8 +100,8 @@ def save_images(images, species,  directory='train', \
     df = pd.DataFrame(raw_data, columns = ['image_paths', 'species'])
     df.to_csv(csv_name)
 #os.chdir(r'D:\Krishna\DL\leafnet')
-#save_images(images_train, species_train, directory='train',
-#            csv_name='leafsnap-dataset-train-images.csv', augment=True)
+save_images(images_train, species_train, directory='train',
+            csv_name='leafsnap-dataset-train-images.csv', augment=True)
 save_images(images_test, species_test, directory='test',
             csv_name='leafsnap-dataset-test-images.csv', augment=False)
 

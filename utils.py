@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import torch
 import random
+import imageio
 
 from PIL import Image
 from scipy import integrate
@@ -30,15 +31,15 @@ def rotate(image, angle):
 
 def load_image_and_preprocess(path, segmented_path, resolution = 16):
     # Open image from disk
-    image = misc.imread(path.strip())
-    segmented_image = misc.imread(segmented_path.strip())
+    image = imageio.imread(path.strip())
+    segmented_image = imageio.imread(segmented_path.strip())
 
     img = segmented_image
     h, w = img.shape[:2]
     height, width = h, w
     # print('Height: {:3d}, Width: {:4d}\n'.format(height,width))
     ret, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
-    _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # Calculate bounding rectangles for each contour.
     rects = [cv2.boundingRect(cnt) for cnt in contours]
     if rects == []:
@@ -81,7 +82,8 @@ def load_image_and_preprocess(path, segmented_path, resolution = 16):
 
     # Use the rectangle to crop on original image
     img = image[top_y:bottom_y, left_x:right_x]
-    img = misc.imresize(img, (resolution, resolution))
+    img = np.array(Image.fromarray(obj=img).resize(size=(224, 224)))
+    # img = misc.imresize(img, (resolution, resolution))
     return img
 
 

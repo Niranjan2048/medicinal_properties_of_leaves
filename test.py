@@ -48,8 +48,8 @@ def test(test_loader, model, criterion):
     end = time.time()
     for i, (input, target) in enumerate(test_loader):
         if USE_CUDA:
-            input = input.cuda(async=True)
-            target = target.cuda(async=True)
+            input = input.cuda(non_blocking=True)
+            target = target.cuda(non_blocking=True)
         with torch.no_grad(): 
             input_var = torch.autograd.Variable(input)
             target_var = torch.autograd.Variable(target)
